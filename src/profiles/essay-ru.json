@@ -1,0 +1,71 @@
+{
+  "name": "essay-ru",
+  "channel": "essay",
+  "lang": "ru",
+  "persona": "neutral",
+  "description": "Generic Russian profile, the public default for Russian prose. Anchor = Ильяхов «Пиши, сокращай» + Нора Галь «Слово живое и мёртвое» (инфостиль / анти-канцелярит), NOT Stephen King (English-prose craft). Runs the script-agnostic rhythm + markdown-format tells (CV/burstiness, closing-nugget, bold/italic, em-dash) plus the 5 RU vocab tells. English-phrase-anchored tells (banned-vocab, hedge, tricolon-with-'and', King) are deliberately NOT listed: they do not apply to Russian. Carries NO per-author calibration: r-uniform-polish burstiness and em-dash density use the registry's generic defaults rather than any individual writer's fingerprint. Clone this and tune params to calibrate to a specific Russian voice. The RU vocab tells are MEDIUM (precision-biased), so the effective gate is r-uniform-polish + the ear.",
+  "registry": "../tells/registry.json",
+  "rules": [
+    {
+      "tellId": "r-uniform-polish",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "r-closing-nugget",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "r-bold-aphorism",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "r-italic-drama",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-boldface-inline",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-bold-list-header",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-em-dash-density",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "ru-kantselyarit",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "ru-usiliteli",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "ru-shtampy",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "ru-vvodnaya-voda",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "ru-ai-scaffolding",
+      "enabled": true,
+      "severity": "MEDIUM"
+    }
+  ],
+  "procedure": []
+}

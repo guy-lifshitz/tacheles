@@ -1,0 +1,3 @@
+#!/usr/bin/env node
+// Back-compat alias: `voice` forwards to the `tacheles` entry. Same args, same behavior.
+import "./tacheles";

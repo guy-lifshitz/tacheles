@@ -1,0 +1,171 @@
+{
+  "name": "consulting-en-formal",
+  "channel": "consulting",
+  "lang": "en",
+  "persona": "formal",
+  "description": "Formal consulting deliverables (SOW, ROPA, proposal, gap assessment). Different modality: formal consultant register, LESS sensitive to human voice. Surface de-AI + Undercover strict, BUT formatting tells that formal docs use legitimately (colon-headers, bold list headers, mid-prose bold, structure signposting, smart quotes, em-dash) are OFF. Rhythm tells off/soft. King discipline soft (LOW): no King rhythm transformation.",
+  "registry": "../tells/registry.json",
+  "rules": [
+    {
+      "tellId": "s-colon-header",
+      "enabled": false,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-list-tricolon",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-both-sides-hedge",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-bold-list-header",
+      "enabled": false,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-boldface-inline",
+      "enabled": false,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-transition-stack",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-meta-scaffolding",
+      "enabled": false,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-ascii-only",
+      "enabled": false,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-banned-vocab",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-banned-copula",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-em-dash-density",
+      "enabled": false,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-rhetorical-qa",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-hedge-opener",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-significance-wrap",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "r-reframe-opener",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "r-significance-announce",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "r-bold-aphorism",
+      "enabled": false,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "r-italic-drama",
+      "enabled": false,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "r-sentence-triad",
+      "enabled": false,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "r-closing-nugget",
+      "enabled": false,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "r-uniform-polish",
+      "enabled": false,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "k-adverbs",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "k-passive",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "k-fancy-word",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "k-cliche-simile",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "k-pet-peeve",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "k-length-cut",
+      "enabled": false,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-gpt-vocab",
+      "enabled": false,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-gpt-filler",
+      "enabled": false,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-whether-opener",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-gpt-scaffolding",
+      "enabled": false,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-gpt-future-close",
+      "enabled": true,
+      "severity": "MEDIUM"
+    }
+  ],
+  "procedure": []
+}

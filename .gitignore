@@ -1,0 +1,49 @@
+# dependencies (bun install)
+node_modules
+
+# output
+out
+dist
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+_.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# /build pipeline runtime artefacts (never commit)
+/.hal-build/
+/.hal-orchestrator-pid
+/build-state.yaml
+/build-metadata.json
+/build-spec.md
+/build-tests.md
+/build-red-output.log
+/build-green-output.log
+/build-opus-validation.md
+/build-plan-review.md
+
+# HAL hook telemetry that leaks into subdirs when hooks fire with this CWD
+/SHARED/

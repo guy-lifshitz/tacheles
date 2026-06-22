@@ -1,0 +1,189 @@
+{
+  "name": "technical-en",
+  "channel": "technical",
+  "lang": "en",
+  "persona": "neutral",
+  "description": "Technical/reference register (API docs, build/architecture docs, READMEs). Lower-noise sibling of essay-en: register-mismatch tells (ascii-only, em-dash density, bold/colon headers, list tricolon, rhetorical Q&A) drop to LOW; prose-rhythm/drama tells (italic-drama, bold-aphorism, sentence-triad, closing-nugget, uniform-polish) are disabled; genuine cross-register AI-tells (banned vocab, hedge openers, significance-wrap, meta-scaffolding, King concision) stay on. s-banned-vocab excludes the reclaimed technical noun 'harness' via the params.exclude seam; the registry list is preserved by the param merge. k-length-cut off (two-draft delta).",
+  "registry": "../tells/registry.json",
+  "rules": [
+    {
+      "tellId": "s-colon-header",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-list-tricolon",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-both-sides-hedge",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-bold-list-header",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-boldface-inline",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-transition-stack",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-meta-scaffolding",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-ascii-only",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-banned-vocab",
+      "enabled": true,
+      "severity": "HIGH",
+      "params": {
+        "exclude": ["harness"]
+      }
+    },
+    {
+      "tellId": "s-banned-copula",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-em-dash-density",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-rhetorical-qa",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-hedge-opener",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-significance-wrap",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "r-reframe-opener",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "r-significance-announce",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "r-bold-aphorism",
+      "enabled": false,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "r-italic-drama",
+      "enabled": false,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "r-sentence-triad",
+      "enabled": false,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "r-closing-nugget",
+      "enabled": false,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "r-uniform-polish",
+      "enabled": false,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "k-adverbs",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "k-passive",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "k-fancy-word",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "k-cliche-simile",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "k-pet-peeve",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "k-length-cut",
+      "enabled": false,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-hollow-filler",
+      "enabled": true,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-hollow-intensifier",
+      "enabled": false,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-expletive-opener",
+      "enabled": false,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-gpt-vocab",
+      "enabled": false,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-gpt-filler",
+      "enabled": false,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-whether-opener",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-gpt-scaffolding",
+      "enabled": false,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-gpt-future-close",
+      "enabled": true,
+      "severity": "MEDIUM"
+    }
+  ],
+  "procedure": []
+}

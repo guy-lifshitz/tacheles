@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+// Tacheles CLI launcher.
+//
+// Runs under plain Node (for `npx tacheles` / `npm i -g tacheles`) and under Bun
+// (for local dev). Prefers the prebuilt, Node-runnable bundle at `dist/cli.js`
+// (shipped in the npm tarball); if that is absent — e.g. a fresh dev checkout
+// before `bun run build` — it falls back to the TypeScript source, which only
+// Bun can import directly.
+import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+
+const here = dirname(fileURLToPath(import.meta.url));
+const builtEntry = join(here, "..", "dist", "cli.js");
+
+if (existsSync(builtEntry)) {
+  await import(builtEntry);
+} else if (typeof Bun !== "undefined") {
+  // Dev fallback: Bun can import the TS source directly.
+  await import(join(here, "..", "src", "cli.ts"));
+} else {
+  process.stderr.write(
+    "tacheles: no build found. Run `bun run build` first, " +
+      "or install the published package which ships dist/.\n",
+  );
+  process.exit(2);
+}

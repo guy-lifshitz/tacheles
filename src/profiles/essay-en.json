@@ -1,0 +1,186 @@
+{
+  "name": "essay-en",
+  "channel": "essay",
+  "lang": "en",
+  "persona": "neutral",
+  "description": "Generic English longform profile and the default for `tacheles check`. Full anti-AI-slop linter for essays/blog posts/articles: all surface tells, the 7 rhythm tells, and King concision are on, mirroring the strict longform register. Carries NO per-author calibration: em-dash density, sentence/paragraph burstiness (r-uniform-polish), and k-passive use the registry's generic defaults rather than any individual writer's fingerprint, so it works out-of-box on any author's prose. Clone this and tune params/exclude-lists to calibrate to a specific voice. Only k-length-cut (a two-draft delta metric) is off in the linter.",
+  "registry": "../tells/registry.json",
+  "rules": [
+    {
+      "tellId": "s-colon-header",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-list-tricolon",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-both-sides-hedge",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-bold-list-header",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-boldface-inline",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-transition-stack",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-meta-scaffolding",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-ascii-only",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-banned-vocab",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-banned-copula",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-em-dash-density",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-rhetorical-qa",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-hedge-opener",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "s-significance-wrap",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "r-reframe-opener",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "r-significance-announce",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "r-bold-aphorism",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "r-italic-drama",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "r-sentence-triad",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "r-closing-nugget",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "r-uniform-polish",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "k-adverbs",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "k-passive",
+      "enabled": true,
+      "severity": "HIGH"
+    },
+    {
+      "tellId": "k-fancy-word",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "k-cliche-simile",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "k-pet-peeve",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "k-length-cut",
+      "enabled": false,
+      "severity": "LOW"
+    },
+    {
+      "tellId": "s-hollow-filler",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-hollow-intensifier",
+      "enabled": false,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-expletive-opener",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-gpt-vocab",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-gpt-filler",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-whether-opener",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-gpt-scaffolding",
+      "enabled": true,
+      "severity": "MEDIUM"
+    },
+    {
+      "tellId": "s-gpt-future-close",
+      "enabled": true,
+      "severity": "MEDIUM"
+    }
+  ],
+  "procedure": []
+}

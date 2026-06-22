@@ -1,0 +1,43 @@
+{
+  "name": "tacheles",
+  "version": "0.1.0",
+  "description": "Make AI-assisted writing sound like you wrote it, not a model: Tacheles flags the exact AI tells and shows you how to cut them.",
+  "license": "MIT",
+  "author": "Guy Lifshitz",
+  "module": "index.ts",
+  "type": "module",
+  "private": false,
+  "bin": {
+    "tacheles": "bin/tacheles",
+    "voice": "bin/voice"
+  },
+  "files": [
+    "bin/",
+    "dist/",
+    "README.md",
+    "LICENSE",
+    "CONTRIBUTING.md"
+  ],
+  "scripts": {
+    "gen:embedded": "bun scripts/gen-embedded.ts",
+    "build": "bun scripts/build.ts",
+    "build:binary": "bun run gen:embedded && bun build --compile src/cli.ts --outfile dist/bin/tacheles",
+    "prepack": "bun run build",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guy-lifshitz/tacheles.git"
+  },
+  "homepage": "https://github.com/guy-lifshitz/tacheles#readme",
+  "bugs": {
+    "url": "https://github.com/guy-lifshitz/tacheles/issues"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
