@@ -1,6 +1,6 @@
 {
   "name": "tacheles",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Make AI-assisted writing sound like you wrote it, not a model: Tacheles flags the exact AI tells and shows you how to cut them.",
   "license": "MIT",
   "author": "Guy Lifshitz",
