@@ -141,7 +141,7 @@ gpt-draft.md  (profile: essay-en)
 FAIL — 2 HIGH, 2 MEDIUM
 ```
 
-This is a heuristic, not proof.
+These are tendencies, not laws: a GPT draft can still use em-dashes, a Claude draft can still say `delve`. Tacheles does not try to name the model that wrote your text. It flags the slop either way.
 
 ## A full example
 
