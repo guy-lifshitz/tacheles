@@ -1,4 +1,5 @@
 import type { Finding, Severity } from "../types.js";
+import { maskCode } from "../check.js";
 
 export function countWords(text: string): number {
   let body = text;
@@ -9,7 +10,7 @@ export function countWords(text: string): number {
       body = text.slice(3 + closeMatch.index + closeMatch[0].length);
     }
   }
-  return body.split(/\s+/).filter(Boolean).length;
+  return maskCode(body).split(/\s+/).filter(Boolean).length;
 }
 
 export function kingLengthCut(

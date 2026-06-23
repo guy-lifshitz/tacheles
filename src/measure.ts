@@ -6,7 +6,7 @@ import {
   sentenceLengths,
   paragraphCounts,
 } from "./detectors/paraUniformity.js";
-import { stripFrontmatter } from "./check.js";
+import { stripFrontmatter, maskCode } from "./check.js";
 
 export interface MeasureResult {
   file: string;
@@ -42,8 +42,10 @@ function round2(n: number): number {
  * match what the gates check.
  */
 export function measure(text: string, file: string): MeasureResult {
-  // Strip YAML frontmatter the same way check() does.
-  const { body } = stripFrontmatter(text);
+  // Strip YAML frontmatter the same way check() does, then mask code blocks so
+  // fenced content doesn't inflate stylometry numbers.
+  const { body: rawBody } = stripFrontmatter(text);
+  const body = maskCode(rawBody);
 
   const slen = sentenceLengths(body);
   const paraCounts = paragraphCounts(body);
@@ -77,10 +79,12 @@ export function measure(text: string, file: string): MeasureResult {
 }
 
 /**
- * Read a corpus file and run measure() on it, writing the JSON object and a
- * one-line human summary to stdout. Returns the process exit code.
+ * Read a corpus file and run measure() on it. When asJson is true, emit
+ * machine-readable JSON to stdout; otherwise emit a human-readable block.
+ * Either way, the one-line "measured:" summary goes to stderr. Returns the
+ * process exit code.
  */
-export function runMeasure(filePath: string): number {
+export function runMeasure(filePath: string, asJson = false): number {
   let text: string;
   try {
     text = readFileSync(resolve(filePath), "utf-8");
@@ -97,7 +101,24 @@ export function runMeasure(filePath: string): number {
 
   const result = measure(text, filePath);
 
-  process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+  if (asJson) {
+    process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+  } else {
+    process.stdout.write(
+      `${result.file}\n\n` +
+      `  words           ${result.words}\n` +
+      `  sentences       ${result.sentences}\n` +
+      `  paragraphs      ${result.paragraphs}\n` +
+      `  sentence mean   ${result.sentenceLength.mean.toFixed(1)} words\n` +
+      `  sentence CV     ${result.sentenceLength.cv.toFixed(2)}\n` +
+      `  paragraph CV    ${result.paragraphLength.cv.toFixed(2)}\n` +
+      `  em-dash/1k      ${result.emDashPerThousand.toFixed(1)}\n\n` +
+      `  suggested profile params:\n` +
+      `    s-em-dash-density.perThousand  ${result.suggestedProfile["s-em-dash-density"].perThousand}\n` +
+      `    r-uniform-polish.sentCvFloor   ${result.suggestedProfile["r-uniform-polish"].sentCvFloor.toFixed(2)}\n` +
+      `    r-uniform-polish.paraCvFloor   ${result.suggestedProfile["r-uniform-polish"].paraCvFloor.toFixed(2)}\n`
+    );
+  }
 
   const summary =
     `measured: mean ${result.sentenceLength.mean.toFixed(1)} words, ` +

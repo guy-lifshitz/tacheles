@@ -77,7 +77,7 @@ describe("measure subcommand", () => {
   });
 
   test("exit 0 and well-formed JSON shape on a temp corpus", async () => {
-    const { exitCode, stdout, stderr } = await spawn(["measure", corpusPath]);
+    const { exitCode, stdout, stderr } = await spawn(["measure", corpusPath, "--json"]);
     expect(exitCode).toBe(0);
     const json = JSON.parse(stdout);
     expect(json.file).toBe(corpusPath);

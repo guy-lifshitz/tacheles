@@ -183,7 +183,11 @@ if (args[0] === "check") {
 } else if (args[0] === "measure") {
   const rawFilePath = args[1];
   if (rawFilePath === undefined) usage();
-  process.exit(runMeasure(rawFilePath));
+  let asJsonMeasure = false;
+  for (let i = 2; i < args.length; i++) {
+    if (args[i] === "--json") asJsonMeasure = true;
+  }
+  process.exit(runMeasure(rawFilePath, asJsonMeasure));
 } else if (args[0] === "compare-drafts") {
   const origPath = args[1];
   const rewritePath = args[2];
