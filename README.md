@@ -99,79 +99,18 @@ A run reads the file (ignoring code blocks, inline code, and frontmatter), execu
 
 ## What it catches
 
-Every check is one named tell: a regex or a statistic that flags one kind of slop, paired with the rule for fixing it. We did not invent the rules. The English concision checks (`k-*`) come straight from Stephen King's *On Writing*: kill the adverbs, prefer the active voice, cut the fancy word, no tired similes. The Russian pack follows Ильяхов and Нора Галь (канцелярит, штампы, вода); Hebrew has its own seed. The surface and rhythm tells come from a house style that catalogs how the models write.
+Every check is one named tell: a regex or a statistic that flags one kind of slop, paired with the rule for fixing it. We did not invent the rules. The English checks come from Stephen King's *On Writing* (kill the adverbs, prefer the active voice, cut the fancy word); the Russian pack from Ильяхов and Нора Галь. A few, before and after:
 
-Here is every active tell, grouped, with an example it catches and the fix:
-
-### Surface — words & formatting
-
-| Tell | Catches, for example | The fix |
+| Tell | Before | After |
 |---|---|---|
-| `s-colon-header` | `Context: the team had shipped on Friday. Fix: we rolled back.` | Fold the label into running prose. |
-| `s-list-tricolon` | `efficient, reliable, and effective` | Use two or four items. If a triplet fits naturally, drop one. |
-| `s-both-sides-hedge` | `Both can be true depending on your threat model.` | Pick one side or state the disagreement. |
-| `s-bold-list-header` | `- **Speed:** it ran in 2s.` | Plain bullets with running prose. |
-| `s-boldface-inline` | `This is the **single most important** thing.` | Let the sentence carry the emphasis; drop the bold. |
-| `s-transition-stack` | `Furthermore... Moreover... Additionally...` | Max one per 500 words; usually cut entirely. |
-| `s-meta-scaffolding` | `In this post, we'll explore three ways to...` | Structure is felt, not signposted (McPhee). Just start. |
-| `s-ascii-only` | `“the fix” — it worked → done` | ASCII only in plaintext channels (forums, chat). NOT applicable to DOCX/PDF deliverables. |
-| `s-banned-vocab` | `leverage robust frameworks to foster a seamless journey` | Anglo-Saxon over Latinate: use/start/help/try. Name the specific thing, not the category. |
-| `s-banned-copula` | `The framework serves as a cornerstone.` | Use 'is', or name what it does. |
-| `s-em-dash-density` | `It worked — mostly — and then — well — it didn't.` | Reserve for genuine interruption; ~1 per 400 words. Use a comma or period. |
-| `s-rhetorical-qa` | `The catch? Cost. The kicker? It scales.` | Answer in prose, or don't frame it as a question. |
-| `s-hedge-opener` | `It's worth noting that the vendor shipped defaults.` | Delete the windup; lead with the claim. |
-| `s-significance-wrap` | `This underscores the critical importance of proactive resilience.` | Cut it. Let the content carry its weight; end on a fact. |
-| `s-hollow-filler` | `It's important to note that, when it comes to security, a number of controls play a crucial role.` | Cut the phrase; state the point directly. 'in order to' -> 'to'; 'the fact that' -> 'that'. |
-| `s-hollow-intensifier` | `This is very important and quite robust.` | Delete, or use a stronger specific word. |
-| `s-expletive-opener` | `There are many teams that struggle. It is the judgment that matters.` | 'There are teams that struggle' -> 'Teams struggle'. Front the subject. |
-| `s-gpt-vocab` | `a cutting-edge, game-changing platform to supercharge and unlock value` | name the concrete thing it does. |
-| `s-gpt-filler` | `Moving forward, the bottom line is, in terms of value...` | cut; state the point. |
-| `s-whether-opener` | `Whether you're a startup or an enterprise, ...` | address one reader directly. |
-| `s-gpt-scaffolding` | `In today's digital landscape... Let's dive in. At its core...` | open on a concrete fact. |
-| `s-gpt-future-close` | `As we look ahead, the future of work is bright. Only time will tell.` | end on a concrete claim or cut. |
+| `s-banned-vocab` | `leverage robust frameworks to foster a seamless journey` | `use proven frameworks so onboarding stays simple` |
+| `s-em-dash-density` | `It worked — mostly — and then — well — it didn't.` | `It worked, mostly. Then it didn't.` |
+| `k-passive` | `40GB was exfiltrated. Mistakes were made.` | `Attackers exfiltrated 40GB. We misconfigured the bucket.` |
+| `k-adverbs` | `significantly improved, rapidly evolving` | `cut deploy time in half, changing weekly` |
+| `r-sentence-triad` | `It reports the result. It marks the failure. It writes the log.` | `It reports the result and writes a log. Failures get marked inline.` |
+| `ru-kantselyarit` | `В целях обеспечения безопасности данный продукт является решением.` | `Чтобы защитить данные, продукт их шифрует.` |
 
-### Rhythm — how it flows
-
-| Tell | Catches, for example | The fix |
-|---|---|---|
-| `r-reframe-opener` | `Cost is a measured number here, not a guess.` | Commit to Y directly. Allowed once per piece at the moment that earns it. |
-| `r-significance-announce` | `The shape is clear and a little surprising:` | Just state the thing. Let the reader decide it's surprising. |
-| `r-bold-aphorism` | `**wall clock ≈ tokens ≈ round trips.**` | Make the claim in plain prose inside a paragraph, or cut it. |
-| `r-italic-drama` | `The subprocess time *is* the wall clock.` | Let word order carry the stress; drop the italic. |
-| `r-sentence-triad` | `It reports the result. It marks the failure. It writes the log.` | Break the parallel; vary two of the three. |
-| `r-closing-nugget` | `They are the same lever.` | Kill the darling. End the paragraph on a concrete detail or a flat statement. |
-| `r-uniform-polish` | `Three consecutive 18-word, equally-polished sentences.` | Deliberately vary length; leave at least one short/flat line per few paragraphs. |
-
-### Concision — Stephen King's rules
-
-| Tell | Catches, for example | The fix |
-|---|---|---|
-| `k-adverbs` | `significantly improved, rapidly evolving, fundamentally misunderstood` | Delete it. If the sentence needs it, the verb is wrong or you need a concrete detail. 'significantly improved' -> name the number. |
-| `k-passive` | `40GB was exfiltrated. Mistakes were made.` | Name the actor. 'Attackers exfiltrated 40GB.' |
-| `k-fancy-word` | `utilize, commence, facilitate, endeavor, ascertain` | use, start, help, try, find out |
-| `k-cliche-simile` | `like a madman, pretty as a summer day, fought like a tiger, at the speed of light` | Fresh, simple, concrete image, or none. |
-| `k-pet-peeve` | `at this point in time, at the end of the day, the fact that, along these lines` | Cut, or replace with the plain word (now / because). |
-
-### Russian pack — Ильяхов / Нора Галь
-
-| Tell | Catches, for example | The fix |
-|---|---|---|
-| `ru-kantselyarit` | `В целях обеспечения безопасности данный продукт является решением.` | Замени на живой глагол: 'чтобы защитить … продукт защищает'. Убери 'является' — поставь тире или прямое сказуемое. |
-| `ru-usiliteli` | `Это уникальное, инновационное и крайне потрясающее решение.` | Убери оценку, покажи факт: что именно делает и насколько (число, пример). |
-| `ru-shtampy` | `В современном мире цифровая трансформация играет важную роль.` | Вырежи штамп и скажи конкретно: кто, что и зачем делает. |
-| `ru-vvodnaya-voda` | `Стоит отметить, что, как известно, важно понимать суть.` | Убери зачин — сразу скажи суть. |
-| `ru-ai-scaffolding` | `Давайте разберёмся. ... В заключение стоит отметить. Подведём итог.` | Начни с конкретного факта; закончи выводом, а не объявлением вывода. |
-
-### Hebrew pack
-
-| Tell | Catches, for example | The fix |
-|---|---|---|
-| `he-usiliteli` | `פתרון מהפכני, עוצמתי ופורץ דרך.` | הורד את ההערכה, הצג עובדה: מה בדיוק עושה ובכמה. |
-| `he-shtampy` | `בעידן הדיגיטלי, אבטחת מידע ממלאת תפקיד מרכזי.` | מחק את הקלישאה ואמור מי עושה מה וכמה. |
-| `he-vvodnaya` | `חשוב לציין שכידוע, ראוי לציין את העניין.` | מחק את הפתיח — אמור מיד את העיקר. |
-| `he-ai-scaffolding` | `בואו נצלול לעומק. במאמר זה נבחן. בשורה התחתונה, לסיכום.` | פתח בעובדה קונקרטית; סיים במסקנה, לא בהכרזה על מסקנה. |
-
-Each language ships its own pack (see [Languages](#languages)). Profiles decide which of these run, and how hard (see [Profiles](#profiles)).
+That is 6 of 39 active tells; the full set is data in [`src/tells/registry.json`](src/tells/registry.json). Profiles decide which of them run, and how hard.
 
 
 ## Model packs
