@@ -70,4 +70,22 @@ describe("measure() stylometry", () => {
     expect(m.sentences).toBe(r.sentences);
     expect(m.emDashPerThousand).toBe(r.emDashPerThousand);
   });
+
+  test("fenced code blocks are excluded from word count and em-dash count", () => {
+    // Corpus without any code block — baseline numbers.
+    const plain =
+      "The cat sat on the mat. It was warm and sunny. Birds sang all morning long.";
+    const rPlain = measure(plain, "plain.txt");
+
+    // Same corpus with a fenced code block appended that contains em-dashes (—)
+    // and many extra words. If maskCode is wired into measure(), both should
+    // produce identical words and emDashPerThousand. Without the fix they diverge.
+    const withCode =
+      plain +
+      "\n\n```\nconst x = value — other — thing;\n// em-dash — inside — fence — extra words words words\n```\n";
+    const rWithCode = measure(withCode, "with-code.txt");
+
+    expect(rWithCode.words).toBe(rPlain.words);
+    expect(rWithCode.emDashPerThousand).toBe(rPlain.emDashPerThousand);
+  });
 });

@@ -100,4 +100,14 @@ describe("measure subcommand", () => {
     expect(exitCode).toBe(2);
     expect(stderr).toContain("cannot read file");
   });
+
+  test("default output is human-readable (not JSON) when --json is omitted", async () => {
+    // Without --json the measure subcommand must emit a human-readable block to
+    // stdout, not a JSON object. JSON.parse must throw, and the output must
+    // contain a distinctive readable label.
+    const { exitCode, stdout } = await spawn(["measure", corpusPath]);
+    expect(exitCode).toBe(0);
+    expect(() => JSON.parse(stdout)).toThrow();
+    expect(stdout).toContain("em-dash/1k");
+  });
 });

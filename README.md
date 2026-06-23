@@ -44,11 +44,12 @@ tacheles check draft.md
 $ tacheles check draft.md
 draft.md  (profile: essay-en)
 
-  HIGH      line 3  s-banned-vocab      delve
-  HIGH      line 3  s-meta-scaffolding  important to note
-  HIGH      line 7  r-reframe-opener    it's not X, it's
-  MEDIUM   line 12  s-em-dash-density   14 em-dashes / 1000 words
-FAIL — 3 HIGH, 1 MEDIUM
+  HIGH      line 3  s-banned-vocab     delve
+  HIGH      line 3  s-banned-vocab     robust
+  HIGH      line 7  r-reframe-opener   It's not about the tools you pick, it's
+  MEDIUM    line 3  s-gpt-scaffolding  Let's dive
+  MEDIUM         —  s-em-dash-density  3 em-dashes / 45 words
+FAIL — 3 HIGH, 2 MEDIUM
 ```
 
 One finding per line, on the exact line, the way a code linter reports. Add `--json` for machine-readable output to pipe into CI or another tool.
@@ -61,7 +62,7 @@ There is also `tacheles compare-drafts <old> <new>`, which checks that a rewrite
 
 Three pieces:
 
-- **Tells** (the detectors) are the individual checks. Each one is a named pattern, a regex or a statistic, that flags one kind of slop. `s-banned-vocab` flags AI words like `delve`; `r-uniform-polish` flags overly even sentence rhythm. There are 44, grouped by type (surface, rhythm, concision) and by language (each language adds its own pack). All of them are data in [`src/tells/registry.json`](src/tells/registry.json): an id, how it matches, its message, and a default severity. No tell is hard-coded in the engine.
+- **Tells** (the detectors) are the individual checks. Each one is a named pattern, a regex or a statistic, that flags one kind of slop. `s-banned-vocab` flags AI words like `delve`; `r-uniform-polish` flags overly even sentence rhythm. There are 43 active (one more is planned), grouped by type (surface, rhythm, concision) and by language (each language adds its own pack). All of them are data in [`src/tells/registry.json`](src/tells/registry.json): an id, how it matches, its message, and a default severity. No tell is hard-coded in the engine.
 - **Severity** is HIGH, MEDIUM, or LOW per finding. HIGH fails the run (exit 1); MEDIUM and LOW are reported but never fail. That is the strictness knob.
 - **Profiles** decide which tells run, and at what severity, for a kind of writing. A profile is a JSON file: a list of tell ids with `enabled` and `severity`, plus optional per-tell `params` (thresholds, word-lists, exclusions).
 
@@ -92,19 +93,19 @@ The same idea from each trips different checks:
 $ tacheles check claude-draft.md
 claude-draft.md  (profile: essay-en)
 
-  HIGH      line 4  r-reframe-opener    It's not about the framework you choose, it's
-  HIGH      line 9  r-bold-aphorism     Good architecture isn't built. It's earned.
-  MEDIUM   line 14  s-em-dash-density   14.5 em-dashes / 1000 words
+  HIGH      line 3  r-reframe-opener   It's not about the framework you choose, it's
+  HIGH      line 7  r-bold-aphorism    Good architecture isn't built. It's earned.
+  MEDIUM         —  s-em-dash-density  2 em-dashes / 36 words
 FAIL — 2 HIGH, 1 MEDIUM
 
 $ tacheles check gpt-draft.md
 gpt-draft.md  (profile: essay-en)
 
-  HIGH      line 6  s-banned-vocab      tapestry
-  HIGH      line 6  s-banned-vocab      robust
-  HIGH     line 11  s-meta-scaffolding  important to note
-  MEDIUM   line 11  s-whether-opener    Whether you're a seasoned engineer or
-FAIL — 3 HIGH, 1 MEDIUM
+  HIGH      line 3  s-banned-vocab     tapestry
+  HIGH      line 3  s-banned-vocab     robust
+  MEDIUM    line 3  s-gpt-scaffolding  Let's dive
+  MEDIUM    line 5  s-whether-opener   Whether you're a seasoned engineer or
+FAIL — 2 HIGH, 2 MEDIUM
 ```
 
 This is a heuristic, not proof.
