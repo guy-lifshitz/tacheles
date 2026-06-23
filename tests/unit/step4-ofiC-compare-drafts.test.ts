@@ -158,7 +158,7 @@ afterAll(() => {
 describe("compare-drafts CLI", () => {
   // AC12: 100 orig, 80 rewrite → exit 0, JSON pass:true
   test("AC12: orig 100w rewrite 80w → exit 0, pass:true, correct JSON fields", async () => {
-    const { exitCode, stdout } = await spawn(["compare-drafts", origPath100, rwPath80]);
+    const { exitCode, stdout } = await spawn(["compare-drafts", origPath100, rwPath80, "--json"]);
     expect(exitCode).toBe(0);
     const json: any = JSON.parse(stdout);
     expect(json.pass).toBe(true);
@@ -170,7 +170,7 @@ describe("compare-drafts CLI", () => {
 
   // AC13: orig 100, rewrite 100 → exit 1, pass:false, 1 finding
   test("AC13: orig 100w rewrite 100w → exit 1, pass:false, findings.length===1", async () => {
-    const { exitCode, stdout } = await spawn(["compare-drafts", origPath100, rwPath100]);
+    const { exitCode, stdout } = await spawn(["compare-drafts", origPath100, rwPath100, "--json"]);
     expect(exitCode).toBe(1);
     const json: any = JSON.parse(stdout);
     expect(json.pass).toBe(false);
@@ -179,7 +179,7 @@ describe("compare-drafts CLI", () => {
 
   // AC14: orig 100, rewrite 80, --ratio 0.5 → exit 1 (80 > 50)
   test("AC14: orig 100w rewrite 80w --ratio 0.5 → exit 1, pass:false (flag honored)", async () => {
-    const { exitCode, stdout } = await spawn(["compare-drafts", origPath100, rwPath80, "--ratio", "0.5"]);
+    const { exitCode, stdout } = await spawn(["compare-drafts", origPath100, rwPath80, "--ratio", "0.5", "--json"]);
     expect(exitCode).toBe(1);
     const json: any = JSON.parse(stdout);
     expect(json.pass).toBe(false);
@@ -202,7 +202,7 @@ describe("compare-drafts CLI", () => {
 
   // AC17 regression: check on negative fixture still works after dispatch refactor
   test("AC17: voice check <negative-fixture> → exit 1, pass:false (dispatch not broken)", async () => {
-    const { exitCode, stdout } = await spawn(["check", NEGATIVE]);
+    const { exitCode, stdout } = await spawn(["check", NEGATIVE, "--json"]);
     expect(exitCode).toBe(1);
     const json: any = JSON.parse(stdout);
     expect(json.pass).toBe(false);

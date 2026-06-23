@@ -97,6 +97,43 @@ export function stripFrontmatter(text: string): { body: string; lineOffset: numb
   return { body: text.slice(endIdx + closeMatch[0].length), lineOffset };
 }
 
+/**
+ * Replace code regions with spaces so the prose linter never flags code.
+ *
+ * Masks fenced code blocks (``` or ~~~, optionally indented up to 3 spaces, per
+ * CommonMark) and inline code spans (`...`). Every masked character becomes a
+ * space and every newline is preserved, so character offsets and line counts are
+ * unchanged: a detector's `text.slice(0, index).split("\n").length` line math
+ * stays exact and findings keep reporting the right line.
+ *
+ * Without this, fence handling was per-detector and inconsistent — boldfaceInline
+ * skipped fences, but bannedVocab/asciiCyrillicHyphen/king* linted straight
+ * through them, so a README's own code examples tripped the linter.
+ */
+export function maskCode(text: string): string {
+  const blank = (s: string) => s.replace(/[^\n]/g, " ");
+  let openFence: string | undefined; // the opening fence run, e.g. "```" or "~~~~"
+  return text
+    .split("\n")
+    .map((line) => {
+      const run = /^\s{0,3}(`{3,}|~{3,})/.exec(line)?.[1];
+      if (openFence === undefined) {
+        if (run) {
+          openFence = run; // mask the opening fence line itself
+          return blank(line);
+        }
+        // Outside any fence: mask inline code spans only.
+        return line.replace(/`+[^`\n]*`+/g, (m) => " ".repeat(m.length));
+      }
+      // Inside a fence: mask everything; close on a same-char, same-or-longer run.
+      if (run && run[0] === openFence[0] && run.length >= openFence.length) {
+        openFence = undefined;
+      }
+      return blank(line);
+    })
+    .join("\n");
+}
+
 /** Return the set of detector names currently wired into the DETECTORS map. */
 export function getRegisteredDetectorNames(): string[] {
   return Object.keys(DETECTORS);
@@ -109,7 +146,8 @@ export function getRegisteredDetectorNames(): string[] {
  */
 export function check(text: string, profile: Profile, detectors: Record<string, DetectorFn> = DETECTORS): Finding[] {
   const findings: Finding[] = [];
-  const { body: lintableText, lineOffset } = stripFrontmatter(text);
+  const { body, lineOffset } = stripFrontmatter(text);
+  const lintableText = maskCode(body);
 
   for (const rule of profile.rules) {
     if (!rule.enabled) continue;

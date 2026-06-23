@@ -1,8 +1,12 @@
+---
+voice-profile: technical-en
+---
+
 # Tacheles
 
 **Make AI-assisted writing sound like you wrote it, not a model.** Tacheles flags the exact AI tells in your text and shows you how to cut them.
 
-The slop is two things. **Bloat:** an LLM writes one token at a time, each the most probable next word, built to sound fluent and average, not short. So it pads, more words than the idea needs. **Style:** it writes in a register that reads as a machine, the em-dashes, the "it's not X, it's Y", the same fifty words. Tacheles flags both, at the exact line, with the reason, and it runs on your machine: no AI, no API key, nothing uploaded, the same result every time.
+The slop is two things. **Bloat:** an LLM writes one token at a time, each the most probable next word, built to sound fluent and average, not short. So it pads, more words than the idea needs. **Style:** it writes in a register that reads as a machine, the em-dashes, the `it's not X, it's Y`, the same fifty words. Tacheles flags both, at the exact line, with the reason, and it runs on your machine: no AI, no API key, nothing uploaded, the same result every time.
 
 It does not rewrite for you. It shows you what to cut.
 
@@ -38,12 +42,16 @@ tacheles check draft.md
 
 ```
 $ tacheles check draft.md
-  s-banned-vocab     HIGH    delve, robust, tapestry
-  r-reframe-opener   HIGH    "It's not about X, it's about Y"
-  s-meta-scaffolding HIGH    "It's important to note"
-  s-em-dash-density  MEDIUM  14 em-dashes / 1000 words
-FAIL (3 HIGH findings)
+draft.md  (profile: essay-en)
+
+  HIGH      line 3  s-banned-vocab      delve
+  HIGH      line 3  s-meta-scaffolding  important to note
+  HIGH      line 7  r-reframe-opener    it's not X, it's
+  MEDIUM   line 12  s-em-dash-density   14 em-dashes / 1000 words
+FAIL — 3 HIGH, 1 MEDIUM
 ```
+
+One finding per line, on the exact line, the way a code linter reports. Add `--json` for machine-readable output to pipe into CI or another tool.
 
 Exit code is `0` when clean and `1` when there is a HIGH finding, so you can gate it in CI or a commit hook. HIGH fails; MEDIUM and LOW are reported but do not fail.
 
@@ -53,11 +61,11 @@ There is also `tacheles compare-drafts <old> <new>`, which checks that a rewrite
 
 Three pieces:
 
-- **Tells** (the detectors) are the individual checks. Each one is a named pattern, a regex or a statistic, that flags one kind of slop. `s-banned-vocab` flags AI words like "delve"; `r-uniform-polish` flags suspiciously even sentence rhythm. There are 44, grouped by type (surface, rhythm, concision) and by language (each language adds its own pack). All of them are data in [`src/tells/registry.json`](src/tells/registry.json): an id, how it matches, its message, and a default severity. No tell is hard-coded in the engine.
+- **Tells** (the detectors) are the individual checks. Each one is a named pattern, a regex or a statistic, that flags one kind of slop. `s-banned-vocab` flags AI words like `delve`; `r-uniform-polish` flags overly even sentence rhythm. There are 44, grouped by type (surface, rhythm, concision) and by language (each language adds its own pack). All of them are data in [`src/tells/registry.json`](src/tells/registry.json): an id, how it matches, its message, and a default severity. No tell is hard-coded in the engine.
 - **Severity** is HIGH, MEDIUM, or LOW per finding. HIGH fails the run (exit 1); MEDIUM and LOW are reported but never fail. That is the strictness knob.
 - **Profiles** decide which tells run, and at what severity, for a kind of writing. A profile is a JSON file: a list of tell ids with `enabled` and `severity`, plus optional per-tell `params` (thresholds, word-lists, exclusions).
 
-A run reads the file (ignoring code blocks and frontmatter), executes each tell the profile enables, and prints the findings with line numbers and severities. Same input, same output, every time.
+A run reads the file (ignoring code blocks, inline code, and frontmatter), executes each tell the profile enables, and prints the findings with line numbers and severities. Same input, same output, every time.
 
 ## What it catches
 
@@ -65,8 +73,8 @@ The checks come in three types:
 
 | Type | Examples |
 |---|---|
-| **Surface** | em-dashes, AI vocab (delve, robust, tapestry), bold lists, "it's important to note", chatbot scaffolding ("let's dive in", "whether you're a...") |
-| **Rhythm** | "it's not X, it's Y" openers, bold one-liner aphorisms, every paragraph ending on a punchline, suspiciously even sentence length |
+| **Surface** | em-dashes, AI vocab (`delve`, `robust`, `tapestry`), bold lists, `it's important to note`, chatbot scaffolding (`let's dive in`, `whether you're a...`) |
+| **Rhythm** | `it's not X, it's Y` openers, bold one-liner aphorisms, every paragraph ending on a punchline, overly even sentence length |
 | **Concision** | adverbs, passive voice, fancy words, clichés (Stephen King's rules) |
 
 Two targets: bad words, and bloat (padding that adds length, not meaning). Each language ships its own pack of these (see [Languages](#languages)), and some tells are model-specific (see [Model packs](#model-packs)).
@@ -75,23 +83,28 @@ Two targets: bad words, and bloat (padding that adds length, not meaning). Each 
 
 It has separate checks for how different models write, so it catches the slop whatever you drafted with.
 
-- **Claude** leans on rhythm: "it's not X, it's Y" openers, bold one-liner aphorisms, em-dashes.
-- **GPT** leans on vocabulary and scaffolding: "delve" / "robust", "let's dive in", "whether you're a...", and almost no em-dashes.
+- **Claude** leans on rhythm: `it's not X, it's Y` openers, bold one-liner aphorisms, em-dashes.
+- **GPT** leans on vocabulary and scaffolding: `delve` / `robust`, `let's dive in`, `whether you're a...`, and almost no em-dashes.
 
 The same idea from each trips different checks:
 
 ```
 $ tacheles check claude-draft.md
-  r-reframe-opener   HIGH    It's not about the framework you choose, it's...
-  r-bold-aphorism    HIGH    Good architecture isn't built. It's earned.
-  s-em-dash-density  MEDIUM  14.5 em-dashes / 1000 words
-FAIL (2 HIGH findings)
+claude-draft.md  (profile: essay-en)
+
+  HIGH      line 4  r-reframe-opener    It's not about the framework you choose, it's
+  HIGH      line 9  r-bold-aphorism     Good architecture isn't built. It's earned.
+  MEDIUM   line 14  s-em-dash-density   14.5 em-dashes / 1000 words
+FAIL — 2 HIGH, 1 MEDIUM
 
 $ tacheles check gpt-draft.md
-  s-banned-vocab     HIGH    tapestry, robust, landscape
-  s-meta-scaffolding HIGH    It's important to note
-  s-whether-opener   MEDIUM  Whether you're a seasoned engineer or...
-FAIL (2 HIGH findings)
+gpt-draft.md  (profile: essay-en)
+
+  HIGH      line 6  s-banned-vocab      tapestry
+  HIGH      line 6  s-banned-vocab      robust
+  HIGH     line 11  s-meta-scaffolding  important to note
+  MEDIUM   line 11  s-whether-opener    Whether you're a seasoned engineer or
+FAIL — 3 HIGH, 1 MEDIUM
 ```
 
 This is a heuristic, not proof.

@@ -27,7 +27,7 @@ describe("essay-en default profile", () => {
     // Plain, clean prose so the run produces output we can inspect for the resolved profile name.
     writeFileSync(tmp, "we shipped the new index last week and the query path got faster.\n");
     try {
-      const { stdout } = await spawn(["check", tmp]);
+      const { stdout } = await spawn(["check", tmp, "--json"]);
       const json: any = JSON.parse(stdout);
       expect(json.profile).toBe("essay-en");
     } finally {

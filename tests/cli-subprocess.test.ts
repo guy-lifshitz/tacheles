@@ -23,7 +23,7 @@ async function spawn(args: string[]): Promise<{ exitCode: number; stdout: string
 
 describe("CLI exit-code contract", () => {
   test("negative seed: exit 1, pass=false, highCount>=3", async () => {
-    const { exitCode, stdout } = await spawn(["check", NEGATIVE]);
+    const { exitCode, stdout } = await spawn(["check", NEGATIVE, "--json"]);
     expect(exitCode).toBe(1);
     const json = JSON.parse(stdout);
     expect(json.pass).toBe(false);
@@ -31,11 +31,19 @@ describe("CLI exit-code contract", () => {
   });
 
   test("positive seed: exit 0, pass=true, highCount===0", async () => {
-    const { exitCode, stdout } = await spawn(["check", POSITIVE]);
+    const { exitCode, stdout } = await spawn(["check", POSITIVE, "--json"]);
     expect(exitCode).toBe(0);
     const json = JSON.parse(stdout);
     expect(json.pass).toBe(true);
     expect(json.highCount).toBe(0);
+  });
+
+  test("default output is human-readable (not JSON), exit code unchanged", async () => {
+    const { exitCode, stdout, stderr } = await spawn(["check", NEGATIVE]);
+    expect(exitCode).toBe(1);
+    expect(() => JSON.parse(stdout)).toThrow();
+    expect(stdout).toContain("profile:");
+    expect(stderr).toContain("FAIL");
   });
 
   test("nonexistent file: exit 2, stderr contains 'cannot read file'", async () => {
