@@ -4,6 +4,8 @@ voice-profile: technical-en
 
 # Tacheles
 
+*An AI-writing linter: it catches the model's tells in your prose, on the exact line, offline.*
+
 **Make AI-assisted writing sound like you wrote it, not a model.** Tacheles flags the exact AI tells in your text and shows you how to cut them.
 
 The slop is two things. **Bloat:** an LLM writes one token at a time, each the most probable next word, built to sound fluent and average, not short. So it pads, more words than the idea needs. **Style:** it writes in a register that reads as a machine, the em-dashes, the `it's not X, it's Y`, the same fifty words. Tacheles flags both, at the exact line, with the reason, and it runs on your machine: no AI, no API key, nothing uploaded, the same result every time.
@@ -12,6 +14,25 @@ It does not rewrite for you. It shows you what to cut.
 
 > **Tacheles** (תכל׳ס, *tachles*): the bottom line, the point.
 > From Yiddish. The German *Tacheles reden* means to talk straight, no fluff.
+
+## See the difference
+
+**Before** — a paragraph a model would hand you:
+
+```text
+In today's landscape, it's not just about the tools, it's about delving into a
+robust tapestry of ideas that truly resonate with every reader.
+```
+
+Tacheles flags the tells: `delve`, `robust`, `tapestry`, the `it's not X, it's Y`
+opener, and the padding around them. Cut what it points at and you get:
+
+```text
+Pick the tools that fit, then write something worth reading.
+```
+
+Same point, fewer words, none of the tells. It does not write the "after" for you;
+it points at what to cut so you can.
 
 ## Why use it
 
@@ -23,7 +44,15 @@ What it gives you that the alternatives do not:
 - **Tuned to you.** Calibrate it to your own writing and it flags drift from *your* voice, not from a generic rule.
 - **Private, free, repeatable.** No model, no API key, nothing leaves your machine. Same text, same findings, every time.
 
-Most open-source options are one of two things: a black-box "% AI" score, or an English word-list. This is the cut list: multilingual, and tuned to you.
+Three kinds of tool get pointed at AI slop, and they do different jobs:
+
+| Tool | What it does | What you get back |
+|---|---|---|
+| A **"% AI" detector** | Sends your text to a server and scores how AI it looks | A number, like "87% AI". Nothing to act on. |
+| A **humanizer** | Paraphrases your text to slip past those detectors | Bland new text you did not write. |
+| **Tacheles** (a linter) | Flags the exact tell, on the line, with the rule to fix it | A cut list. You keep your words and decide. |
+
+Most open-source options are the first two. This is the third: a cut list, multilingual, and tuned to you.
 
 ## Install
 
