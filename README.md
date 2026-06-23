@@ -17,7 +17,7 @@ It does not rewrite for you. It shows you what to cut.
 
 ## See the difference
 
-**Before** — a paragraph a model would hand you:
+**Before.** A paragraph a model would hand you:
 
 ```text
 In today's landscape, it's not just about the tools, it's about delving into a
@@ -49,8 +49,8 @@ Three kinds of tool get pointed at AI slop, and they do different jobs:
 | Tool | What it does | What you get back |
 |---|---|---|
 | A **"% AI" detector** | Sends your text to a server and scores how AI it looks | A number, like "87% AI". Nothing to act on. |
-| A **humanizer** | Paraphrases your text to slip past those detectors | Bland new text you did not write. |
-| **Tacheles** (a linter) | Flags the exact tell, on the line, with the rule to fix it | A cut list. You keep your words and decide. |
+| A **humanizer** | Uses an LLM to rewrite your draft and strip the AI patterns for you | Edited text the model wrote: fast, but not yours, and different each run. |
+| **Tacheles** (a linter) | Flags the exact tell, on the line, with the rule to fix it | A cut list. Deterministic and offline; you make the cut and keep your voice. |
 
 Most open-source options are the first two. This is the third: a cut list, multilingual, and tuned to you.
 
@@ -138,6 +138,89 @@ FAIL — 2 HIGH, 2 MEDIUM
 ```
 
 This is a heuristic, not proof.
+
+## A full example
+
+To make the difference concrete, here is the "before" essay from [blader/humanizer](https://github.com/blader/humanizer)'s own README: an LLM draft packed with tells.
+
+```text
+Great question! Here is an essay on this topic. I hope this helps!
+
+AI-assisted coding serves as an enduring testament to the transformative potential of large language models, marking a pivotal moment in the evolution of software development. In today's rapidly evolving technological landscape, these groundbreaking tools—nestled at the intersection of research and practice—are reshaping how engineers ideate, iterate, and deliver, underscoring their vital role in modern workflows.
+
+At its core, the value proposition is clear: streamlining processes, enhancing collaboration, and fostering alignment. It's not just about autocomplete; it's about unlocking creativity at scale, ensuring that organizations can remain agile while delivering seamless, intuitive, and powerful experiences to users. The tool serves as a catalyst. The assistant functions as a partner. The system stands as a foundation for innovation.
+
+Industry observers have noted that adoption has accelerated from hobbyist experiments to enterprise-wide rollouts, from solo developers to cross-functional teams. The technology has been featured in The New York Times, Wired, and The Verge. Additionally, the ability to generate documentation, tests, and refactors showcases how AI can contribute to better outcomes, highlighting the intricate interplay between automation and human judgment.
+
+- 💡 **Speed:** Code generation is significantly faster, reducing friction and empowering developers.
+- 🚀 **Quality:** Output quality has been enhanced through improved training, contributing to higher standards.
+- ✅ **Adoption:** Usage continues to grow, reflecting broader industry trends.
+
+While specific details are limited based on available information, it could potentially be argued that these tools might have some positive effect. Despite challenges typical of emerging technologies—including hallucinations, bias, and accountability—the ecosystem continues to thrive. In order to fully realize this potential, teams must align with best practices.
+
+In conclusion, the future looks bright. Exciting times lie ahead as we continue this journey toward excellence. Let me know if you'd like me to expand on any section!
+```
+
+Tacheles on the default `essay-en` profile:
+
+```
+$ tacheles check essay.md
+essay.md  (profile: essay-en)
+
+  HIGH      line 1  s-hedge-opener      Great question
+  HIGH      line 3  s-banned-vocab      transformative
+  HIGH      line 3  s-banned-vocab      pivotal
+  HIGH      line 3  s-banned-vocab      landscape
+  HIGH      line 3  k-adverbs           rapidly
+  HIGH      line 5  s-banned-vocab      seamless
+  HIGH      line 5  r-reframe-opener    It's not just about autocomplete; it's
+  HIGH      line 7  s-ascii-only        enterprise-wide
+  HIGH      line 7  s-ascii-only        cross-functional
+  HIGH      line 7  s-banned-vocab      intricate
+  HIGH      line 7  k-adverbs           Additionally
+  HIGH      line 7  k-passive           been featured
+  HIGH      line 9  k-adverbs           significantly
+  HIGH     line 10  k-passive           been enhanced
+  HIGH     line 13  k-adverbs           potentially
+  HIGH     line 13  k-passive           are limited
+  HIGH     line 13  k-passive           be argued
+  HIGH     line 15  s-banned-vocab      journey
+  MEDIUM    line 3  s-banned-copula     serves as
+  MEDIUM    line 3  s-gpt-vocab         groundbreaking
+  MEDIUM    line 5  s-banned-copula     serves as
+  MEDIUM    line 5  s-banned-copula     stands as
+  MEDIUM    line 5  s-gpt-scaffolding   At its core
+  MEDIUM   line 13  k-pet-peeve         In order to
+  MEDIUM   line 13  s-hollow-filler     In order to
+  MEDIUM   line 13  s-gpt-vocab         best practices
+  MEDIUM   line 15  s-gpt-future-close  the future looks bright
+  MEDIUM         —  s-em-dash-density   4 em-dashes / 306 words
+  MEDIUM         —  r-sentence-triad    The ×3
+FAIL — 18 HIGH, 11 MEDIUM
+```
+
+Every tell, on its line, with a name and a rule behind it: the chatbot opener, the banned vocabulary (`transformative`, `pivotal`, `seamless`), the `it's not X, it's Y` reframe, the `The tool... The assistant... The system...` triad, the em-dash run, the `the future looks bright` close.
+
+This is where it parts ways with a humanizer. Given the same draft, [blader/humanizer](https://github.com/blader/humanizer) rewrites it for you, down to a clean 95-word version that opens:
+
+```text
+AI coding assistants can speed up the boring parts of the job. They're great at
+boilerplate: config files and the little glue code you don't want to write.
+```
+
+Good text, but the model wrote it, not you, and you get a different draft each run. Tacheles never touches your words. It hands you the list above so you make the cuts and keep your own voice.
+
+### Same text, a different profile
+
+That run used `essay-en`, the strict default. Point it at `technical-en`, built for docs, and the same file comes back with a shorter list:
+
+```
+$ tacheles check essay.md --profile technical-en
+...
+FAIL — 7 HIGH, 14 MEDIUM, 4 LOW
+```
+
+Seven HIGH instead of eighteen. `technical-en` keeps the hard vocabulary and the chatbot opener but drops adverbs, passive voice, and the reframe to MEDIUM or LOW, because documentation plays by different rules. That policy, which tells run and how hard, is all a profile is: one JSON file. Four ship, and you copy one and tune it to your own writing.
 
 ## Profiles
 
