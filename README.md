@@ -54,6 +54,14 @@ Three kinds of tool get pointed at AI slop, and they do different jobs:
 
 Most open-source options are the first two. This is the third: a cut list, multilingual, and tuned to you.
 
+## What's in the package
+
+- **The linter.** `tacheles check` (the cut list), `tacheles measure` (your writing's stylometry), `tacheles compare-drafts` (did the rewrite cut at least 10%, King's rule). Offline, deterministic, no API key.
+- **The rewrite skill.** A portable [`SKILL.md`](skills/tacheles/SKILL.md) that runs the whole loop: check, rewrite against the language's tradition, re-check until clean. It also interviews you and builds your voice anchor. Drop it into Claude Code, Claude.ai, the Agent SDK, or any model.
+- **Four profiles.** `essay-en`, `essay-ru`, `consulting-en-formal`, `technical-en`. Copy one and tune your own.
+- **Language packs.** English (Stephen King) and Russian (Ильяхов / Нора Галь): a set of tells plus a rewrite procedure for each.
+- **The guides.** Rewrite procedures and the calibration and voice-anchor walkthroughs in [`docs/reference/`](docs/reference/).
+
 ## Install
 
 ```bash
@@ -246,7 +254,7 @@ You write with a model, the model leaves slop, Tacheles catches it:
 3. The model rewrites to fix it. Give it the findings; for how to fix each one, point it at the rewrite guide for the language (`docs/reference/king-rewrite-procedure.md` for English, `ru-rewrite-procedure.md` for Russian).
 4. Re-check until clean.
 
-The skill in [`skills/tacheles/`](skills/tacheles/SKILL.md) runs this whole loop for you. It is a plain `SKILL.md`, so it works in Claude Code, Claude.ai, the Agent SDK, or any model you hand it to.
+The skill in [`skills/tacheles/`](skills/tacheles/SKILL.md) runs this whole loop for you: it reads the findings, rewrites against the King or Ильяхов procedure pass by pass, re-runs `check` until the gate passes, then tells you to read it aloud and flatten any paragraph that still lands a punchline. It also builds your voice anchor by interviewing you. It is a plain `SKILL.md`, so it works in Claude Code, Claude.ai, the Agent SDK, or any model you hand it to.
 
 ## Make it sound like you
 
@@ -254,6 +262,23 @@ Out of the box it flags generic AI slop. You can tune it to your own voice, two 
 
 - **Your numbers.** Run `tacheles measure <your-corpus>` on a body of your own clean writing. It reports your em-dash rate and sentence/paragraph rhythm and prints a `suggestedProfile` block to drop into a copy of `essay-en`. See [`docs/reference/calibration-guide.md`](docs/reference/calibration-guide.md).
 - **Your style.** Build a "voice anchor": the writers you want to sound like and the habits you refuse. See [`docs/reference/voice-anchor-guide.md`](docs/reference/voice-anchor-guide.md). The skill builds one with you.
+
+Measure on a sample of your own clean writing, and it prints your numbers plus the profile params to use:
+
+```
+$ tacheles measure my-posts.md
+  sentence mean   9.1 words
+  sentence CV     0.70
+  paragraph CV    0.56
+  em-dash/1k      0.0
+
+  suggested profile params:
+    s-em-dash-density.perThousand  1
+    r-uniform-polish.sentCvFloor   0.56
+    r-uniform-polish.paraCvFloor   0.45
+```
+
+Drop those into a copy of `essay-en` and `check` now flags drift from *your* rhythm, not a generic rule. (Measure your clean writing, not an AI draft. Calibrating to slop just teaches it to allow slop.)
 
 A tuned profile is a fingerprint of how you write, so keep yours private. The profiles in this repo are generic on purpose.
 
