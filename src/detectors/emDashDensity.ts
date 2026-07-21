@@ -1,4 +1,5 @@
 import type { Finding, Severity } from "../types.js";
+import { countWords } from "../words.js";
 
 export function emDashDensity(
   text: string,
@@ -6,9 +7,9 @@ export function emDashDensity(
   ruleId?: string,
   severity?: Severity
 ): Finding[] {
-  const minWords = typeof params?.minWords === "number" ? params.minWords : 30;
-  const perThousand = typeof params?.perThousand === "number" ? params.perThousand : 4;
-  const words = text.split(/\s+/).filter(Boolean).length;
+  const minWords = Number.isFinite(params?.minWords) ? (params?.minWords as number) : 30;
+  const perThousand = Number.isFinite(params?.perThousand) ? (params?.perThousand as number) : 4;
+  const words = countWords(text);
   if (words < minWords) return [];
   const emCount = (text.match(/—/g) || []).length;
   const density = (emCount / words) * 1000;

@@ -7,6 +7,7 @@ import {
   paragraphCounts,
 } from "./detectors/paraUniformity.js";
 import { stripFrontmatter, maskCode } from "./check.js";
+import { countWords } from "./words.js";
 
 export interface MeasureResult {
   file: string;
@@ -22,17 +23,9 @@ export interface MeasureResult {
   };
 }
 
-/** Word count convention shared with emDashDensity: whitespace-split non-empty tokens. */
-function countWords(text: string): number {
-  return text.split(/\s+/).filter(Boolean).length;
-}
-
-function round1(n: number): number {
-  return Math.round(n * 10) / 10;
-}
-
-function round2(n: number): number {
-  return Math.round(n * 100) / 100;
+function round(n: number, dp: number): number {
+  const f = 10 ** dp;
+  return Math.round(n * f) / f;
 }
 
 /**
@@ -63,16 +56,16 @@ export function measure(text: string, file: string): MeasureResult {
     words,
     sentences: slen.length,
     paragraphs: paraCounts.length,
-    sentenceLength: { mean: round1(sentMean), cv: round2(sentCv) },
-    paragraphLength: { cv: round2(paraCv) },
-    emDashPerThousand: round1(emDashPerThousand),
+    sentenceLength: { mean: round(sentMean, 1), cv: round(sentCv, 2) },
+    paragraphLength: { cv: round(paraCv, 2) },
+    emDashPerThousand: round(emDashPerThousand, 1),
     suggestedProfile: {
       "s-em-dash-density": {
         perThousand: Math.max(1, Math.ceil(emDashPerThousand)),
       },
       "r-uniform-polish": {
-        sentCvFloor: round2(0.8 * sentCv),
-        paraCvFloor: round2(0.8 * paraCv),
+        sentCvFloor: round(0.8 * sentCv, 2),
+        paraCvFloor: round(0.8 * paraCv, 2),
       },
     },
   };
